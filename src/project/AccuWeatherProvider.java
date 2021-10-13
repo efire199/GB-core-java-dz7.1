@@ -8,12 +8,15 @@ import okhttp3.Response;
 import project.enums.Periods;
 
 import java.io.IOException;
+import java.util.List;
 
 public class AccuWeatherProvider implements WeatherProvider {
 
     private static final String BASE_HOST = "dataservice.accuweather.com";
     private static final String FORECAST_ENDPOINT = "forecasts";
     private static final String CURRENT_CONDITIONS_ENDPOINT = "currentconditions";
+    private static final String DAILY_ENDPOINT = "daily";
+    private static final String FIVE_DAYS_CONDITIONS_ENDPOINT = "5day";
     private static final String API_VERSION = "v1";
     private static final String API_KEY = ApplicationGlobalState.getInstance().getApiKey();
 
@@ -38,14 +41,47 @@ public class AccuWeatherProvider implements WeatherProvider {
                 .url(url)
                 .build();
 
-            Response response = client.newCall(request).execute();
-            System.out.println(response.body().string());
+
+            try (Response response = client.newCall(request).execute()) {
+                String resp = response.body().string();
+                //System.out.println(resp);
+                List<Temperature> list= ParseWeatherByDay.parse(resp,periods);
+                for (Temperature t: list){
+                    t.print();
+                }
+            }catch (Exception e){
+                e.getStackTrace();
+            }
+
             // TODO: Сделать в рамках д/з вывод более приятным для пользователя.
             //  Создать класс WeatherResponse, десериализовать ответ сервера в экземпляр класса
             //  Вывести пользователю только текущую температуру в C и сообщение (weather text)
-        }else if(periods.equals(Periods.FIVE_DAYS)){
-            System.out.println("Реализовать дз погоды на 5 дней");
-        }else   throw new IOException("Ошибка периода");
+        }else if (periods.equals(Periods.FIVE_DAYS)){
+            HttpUrl url = new HttpUrl.Builder()
+                    .scheme("http")
+                    .host(BASE_HOST)
+                    .addPathSegment(FORECAST_ENDPOINT)
+                    .addPathSegment(API_VERSION)
+                    .addPathSegment(DAILY_ENDPOINT)
+                    .addPathSegment(FIVE_DAYS_CONDITIONS_ENDPOINT)
+                    .addPathSegment(cityKey)
+                    .addQueryParameter("apikey", API_KEY)
+                    .build();
+            Request request = new Request.Builder()
+                    .get()
+                    .url(url)
+                    .build();
+            try (Response response = client.newCall(request).execute()) {
+                String resp = response.body().string();
+                //System.out.println(resp);
+                List<Temperature> list= ParseWeatherByDay.parse(resp,periods);
+                for (Temperature t: list){
+                    t.print();
+                }
+            }catch (Exception e){
+                e.getStackTrace();
+            }
+        }
 
     }
 

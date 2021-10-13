@@ -3,8 +3,8 @@ package project;
 public final class ApplicationGlobalState {
 
     private static ApplicationGlobalState INSTANCE;
-    private String selectedCity = null;
-    private final String API_KEY = "s7dAkEX7TwiX4FYJ6JN2i7jgbC9XAhoG";
+    private static String selectedCity = null;
+    private final String API_KEY = "UJYFjY4GDmHsSxOvstykeshXMJ6GMdOD";
 
     private ApplicationGlobalState() {
     }
@@ -18,7 +18,7 @@ public final class ApplicationGlobalState {
         return INSTANCE;
     }
 
-    public String getSelectedCity() {
+    public static String getSelectedCity() {
         return selectedCity;
     }
 
@@ -30,3 +30,4 @@ public final class ApplicationGlobalState {
         return this.API_KEY;
     }
 }
+
