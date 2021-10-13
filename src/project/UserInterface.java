@@ -51,7 +51,7 @@ public class UserInterface {
 
 
     private void validateUserInput(String userInput) throws IOException {
-        if (userInput == null || userInput.length() != 1) {
+        if (userInput == null || userInput.length() != 1 ) {
             throw new IOException("Incorrect user input: expected one digit as answer, but actually get " + userInput);
         }
         int answer = 0;

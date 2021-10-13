@@ -37,7 +37,8 @@ public class Controller {
         weatherProvider.getWeather(Periods.NOW);
     }
 
-    public void getWeatherIn5Days() {
-        throw new RuntimeException("Implement in h/w");
+    public void getWeatherIn5Days() throws IOException{
+        //throw new RuntimeException("Implement in h/w");
+        weatherProvider.getWeather(Periods.FIVE_DAYS);
     }
 }
